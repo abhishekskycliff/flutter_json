@@ -1,9 +1,12 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_json_app/Model/User_class.dart';
+import 'package:flutter_json_app/Screen/splash_screen.dart';
 import 'package:flutter_json_app/Services/User_service.dart';
 import 'package:http/http.dart' as http;
+
+import 'Sqflite_json_data.dart';
 
 class Screen_ui extends StatefulWidget {
   @override
@@ -24,9 +27,9 @@ class Screen_state extends State<Screen_ui>{
         future: fetchJSONData(),
         builder: (context, snapshot) {
 
-          if (!snapshot.hasData)
-            return Center(child: CircularProgressIndicator());
-
+          if (!snapshot.hasData) {
+            return Center(child: Splash_screen());
+          }
           return ListView(
             children: snapshot.data.map((user) => ListTile(
               title: Text(user.name),
@@ -37,13 +40,22 @@ class Screen_state extends State<Screen_ui>{
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
-                    )
+                    ),
                 ),
               ),
             ),
             ).toList(),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed:(){
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => Sqflite_data()),
+          );
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.auto_awesome),
       ),
     );
   }
